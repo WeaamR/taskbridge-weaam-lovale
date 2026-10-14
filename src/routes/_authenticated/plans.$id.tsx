@@ -182,7 +182,7 @@ function Tasks({ planId, userId, tasks, refresh }: { planId: string; userId: str
 
 function PrioritySelect({ id, value, onChange, disabled }: { id?: string; value: string; onChange: (v: string) => void; disabled?: boolean }) {
   return (
-    <Select value={value} onValueChange={onChange} disabled={disabled}>
+    <Select value={value} onValueChange={onChange} disabled={!!disabled}>
       <SelectTrigger id={id} className="bg-card" aria-label="Priority"><SelectValue /></SelectTrigger>
       <SelectContent>{PRIORITIES.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
     </Select>
@@ -211,7 +211,7 @@ function TaskRow({ task, refresh }: { task: Task; refresh: () => void }) {
     setBusy(true);
     const { error } = await supabase.from("plan_tasks").delete().eq("id", task.id);
     setBusy(false);
-    if (error) return toast.error(`Couldn't delete task: ${errMsg(error)}`);
+    if (error) { toast.error(`Couldn't delete task: ${errMsg(error)}`); return; }
     toast.success("Task deleted");
     refresh();
   }

@@ -28,9 +28,9 @@ function NewPlan() {
     e.preventDefault();
     if (busy) return;
     const errs: Record<string, string> = {};
-    if (!f.title.trim()) errs.title = "Plan title is required.";
-    if (!f.description.trim()) errs.description = "Task description is required.";
-    if (!f.goal.trim()) errs.goal = "Desired outcome is required.";
+    if (!f.title.trim()) errs["title"] = "Plan title is required.";
+    if (!f.description.trim()) errs["description"] = "Task description is required.";
+    if (!f.goal.trim()) errs["goal"] = "Desired outcome is required.";
     setErrors(errs);
     if (Object.keys(errs).length) return;
     setBusy(true); setError(null);
@@ -54,17 +54,17 @@ function NewPlan() {
         <div className="space-y-1.5">
           <Label htmlFor="title">Plan Title *</Label>
           <Input id="title" placeholder="e.g. Website redesign for Acme" {...field("title")} />
-          {errors.title && <p className="text-xs text-destructive">{errors.title}</p>}
+          {errors["title"] && <p className="text-xs text-destructive">{errors["title"]}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="description">Task Description *</Label>
           <Textarea id="description" rows={5} placeholder="Paste or summarize the request you received." {...field("description")} />
-          {errors.description && <p className="text-xs text-destructive">{errors.description}</p>}
+          {errors["description"] && <p className="text-xs text-destructive">{errors["description"]}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="goal">Desired Outcome *</Label>
           <Textarea id="goal" rows={3} placeholder="What does success look like?" {...field("goal")} />
-          {errors.goal && <p className="text-xs text-destructive">{errors.goal}</p>}
+          {errors["goal"] && <p className="text-xs text-destructive">{errors["goal"]}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="deadline">Deadline (optional)</Label>
