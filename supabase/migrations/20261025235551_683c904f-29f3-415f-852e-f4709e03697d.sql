@@ -1,0 +1,1 @@
+CREATE POLICY signup_limits_server_only ON public.signup_request_limits FOR ALL TO service_role USING (true) WITH CHECK (true);
