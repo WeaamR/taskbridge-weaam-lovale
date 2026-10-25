@@ -97,12 +97,39 @@ export type Database = {
         }
         Relationships: []
       }
+      signup_request_limits: {
+        Row: {
+          attempts: number
+          created_at: string
+          request_key: string
+          reset_at: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          request_key: string
+          reset_at: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          request_key?: string
+          reset_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_signup_request: {
+        Args: { p_action: string; p_email: string; p_ip: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
