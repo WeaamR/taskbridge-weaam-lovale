@@ -2,7 +2,7 @@ import { CONFIRMATION_COOLDOWN_SECONDS, type SignupAction, type SignupResult } f
 
 type AuthError = { status?: number; code?: string; message: string } | null;
 type Dependencies = {
-  check: (email: string, ip: string, action: SignupAction) => Promise<{ status: string; retryAfter?: number }>;
+  check: (email: string, ip: string, action: SignupAction) => Promise<{ status: string; retryAfter?: number | undefined }>;
   register: (email: string, password: string, redirect: string) => Promise<{ error: AuthError; user: { identities?: unknown[]; email_confirmed_at?: string } | null }>;
   resend: (email: string, redirect: string) => Promise<{ error: AuthError }>;
   reset: (email: string, redirect: string) => Promise<{ error: AuthError }>;
@@ -14,7 +14,7 @@ function failure(error: AuthError): SignupResult {
 }
 
 export async function processSignupRequest(
-  input: { email: string; password?: string; action: SignupAction; ip: string; origin: string },
+  input: { email: string; password?: string | undefined; action: SignupAction; ip: string; origin: string },
   dependencies: Dependencies,
 ): Promise<SignupResult> {
   try {
@@ -40,7 +40,7 @@ export async function processSignupRequest(
     if (user.identities?.length === 0) {
       const latest = await dependencies.check(input.email, input.ip, "signup");
       if (latest.status === "confirmed" || latest.status === "unconfirmed") return { status: latest.status };
-      return latest.status === "limited" ? { status: "limited", retryAfter: latest.retryAfter } : failure(null);
+      return latest.status === "limited" ? { status: "limited", retryAfter: latest.retryAfter ?? 60 } : failure(null);
     }
     return { status: "created", requiresConfirmation: !user.email_confirmed_at, retryAfter: 60 };
   } catch {
