@@ -25,7 +25,7 @@ describe("Signup interactions", () => {
   });
   it("offers sign-in and recovery without another signup for confirmed accounts", async () => {
     request.mockResolvedValue({ status: "confirmed" }); fireEvent.submit(form());
-    await waitFor(() => expect(screen.getByRole("button", { name: "Sign In", exact: true })).toBeEnabled());
+    await waitFor(() => expect(screen.getByRole("button", { name: /^Sign In$/ })).toBeEnabled());
     fireEvent.click(screen.getByRole("button", { name: "Forgot password?" }));
     expect(screen.getByRole("button", { name: "Send reset link" })).toBeEnabled();
     expect(request).toHaveBeenCalledTimes(1);

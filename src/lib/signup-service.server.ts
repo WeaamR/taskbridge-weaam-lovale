@@ -1,9 +1,9 @@
 import { CONFIRMATION_COOLDOWN_SECONDS, type SignupAction, type SignupResult } from "./signup";
 
-type AuthError = { status?: number; code?: string; message: string } | null;
+type AuthError = { status?: number | undefined; code?: string | undefined; message: string } | null;
 type Dependencies = {
   check: (email: string, ip: string, action: SignupAction) => Promise<{ status: string; retryAfter?: number | undefined }>;
-  register: (email: string, password: string, redirect: string) => Promise<{ error: AuthError; user: { identities?: unknown[]; email_confirmed_at?: string } | null }>;
+  register: (email: string, password: string, redirect: string) => Promise<{ error: AuthError; user: { identities?: unknown[] | undefined; email_confirmed_at?: string | undefined } | null }>;
   resend: (email: string, redirect: string) => Promise<{ error: AuthError }>;
   reset: (email: string, redirect: string) => Promise<{ error: AuthError }>;
 };
