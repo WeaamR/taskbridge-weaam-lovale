@@ -1,4 +1,5 @@
 import { CONFIRMATION_COOLDOWN_SECONDS, type SignupAction, type SignupResult } from "./signup";
+import { PASSWORD_RESET_URL } from "./auth-urls";
 
 type AuthError = { status?: number | undefined; code?: string | undefined; message: string } | null;
 type Dependencies = {
@@ -22,7 +23,7 @@ export async function processSignupRequest(
     if (account.status === "limited") return { status: "limited", retryAfter: account.retryAfter ?? 60 };
     if (!["new", "confirmed", "unconfirmed"].includes(account.status)) return failure(null);
     if (input.action === "reset") {
-      const { error } = await dependencies.reset(input.email, `${input.origin}/reset-password`);
+      const { error } = await dependencies.reset(input.email, PASSWORD_RESET_URL);
       return error ? failure(error) : { status: "reset", retryAfter: 60 };
     }
     if (account.status === "confirmed") return { status: "confirmed" };

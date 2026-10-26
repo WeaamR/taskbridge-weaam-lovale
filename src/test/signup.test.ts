@@ -62,10 +62,10 @@ describe("Signup account rules", () => {
     d.check.mockResolvedValueOnce({ status: "new" }).mockResolvedValueOnce({ status: "confirmed" });
     expect((await processSignupRequest(input, d)).status).toBe("confirmed");
   });
-  it("requests recovery with the public reset page", async () => {
+  it("always redirects recovery to production, including requests made on localhost", async () => {
     const d = deps("confirmed");
-    expect((await processSignupRequest({ ...input, action: "reset" }, d)).status).toBe("reset");
-    expect(d.reset).toHaveBeenCalledWith(input.email, "https://taskbridge.example/reset-password");
+    expect((await processSignupRequest({ ...input, origin: "http://localhost:3000", action: "reset" }, d)).status).toBe("reset");
+    expect(d.reset).toHaveBeenCalledWith(input.email, "https://taskbridge-weaam.lovable.app/reset-password");
   });
   it("blocks repeated clicks synchronously until the request finishes", () => {
     const gate = createSubmissionGate();

@@ -11,3 +11,4 @@
 
 - Signup, resend, and password-reset requests use a public POST server function with same-origin checks and a service-role-only transactional RPC for account lookup and durable limits; client code never accesses Auth users or privileged credentials.
 - Confirmation cooldowns are enforced in the database as well as the page; no worker-global state is used for abuse protection.
+- Auth email destinations use explicit canonical URL constants, never an incoming request origin for password recovery; the shared auth listener records short-lived, user-bound recovery intent so SDK URL cleanup does not disable the reset form.
