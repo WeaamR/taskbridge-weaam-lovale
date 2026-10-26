@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
 export const Route = createFileRoute("/_authenticated/plans/")({
-  head: () => ({ meta: [{ title: "My Plans — TaskBridge" }, { name: "description", content: "Your saved TaskBridge plans." }] }),
+  head: () => ({ meta: [{ title: "My Plans — TaskBridge" }, { name: "description", content: "Your saved TaskBridge plans." }, { property: "og:title", content: "My Plans — TaskBridge" }, { property: "og:description", content: "Your saved TaskBridge plans." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: MyPlans,
 });
 
