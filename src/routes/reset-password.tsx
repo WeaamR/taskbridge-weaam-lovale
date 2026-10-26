@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Wordmark } from "@/components/Wordmark";
 import { createSubmissionGate } from "@/lib/signup";
+import { clearRecovery, INVALID_RECOVERY_MESSAGE, validateRecoveryLink } from "@/lib/recovery";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({ meta: [
@@ -29,12 +30,11 @@ function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const gate = useRef(createSubmissionGate());
   useEffect(() => {
-    const hash = new URLSearchParams(window.location.hash.slice(1));
-    if (hash.get("type") !== "recovery") { setError("Open the password reset link from your email to continue."); return; }
-    supabase.auth.getUser().then(({ data, error }) => {
-      if (error || !data.user) setError("This reset link is invalid or expired. Please request another link.");
-      else setReady(true);
-    }).catch(() => setError("Unable to verify your reset link. Please try again."));
+    let active = true;
+    validateRecoveryLink(window.location.href, supabase.auth)
+      .then(() => { if (active) setReady(true); })
+      .catch((err: unknown) => { if (active) setError(err instanceof Error ? err.message : "Unable to verify your reset link. Please try again."); });
+    return () => { active = false; };
   }, []);
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -43,7 +43,13 @@ function ResetPasswordPage() {
     setBusy(true); setError(null);
     try {
       const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
+      if (error) {
+        if (error.status === 401 || error.status === 403 || error.code === "session_not_found" || error.code === "refresh_token_not_found") {
+          setReady(false); clearRecovery(); setError(INVALID_RECOVERY_MESSAGE); return;
+        }
+        throw error;
+      }
+      clearRecovery();
       setDone(true);
     } catch { setError("We couldn’t update your password. Please try again."); }
     finally { gate.current.leave(); setBusy(false); }
@@ -58,6 +64,7 @@ function ResetPasswordPage() {
         {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
         <Button className="w-full" disabled={!ready || busy}>{busy ? "Please wait…" : "Update password"}</Button>
       </form>}
+      {!ready && error && <Button asChild variant="link" className="mt-3 h-auto p-0"><Link to="/auth" search={{ mode: "signin" }}>Request a new reset link</Link></Button>}
       <Button asChild variant="link" className="mt-4 h-auto p-0"><Link to="/auth" search={{ mode: "signin" }}>Back to sign in</Link></Button>
     </div>
   </div>;
