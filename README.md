@@ -4,7 +4,7 @@ Implement exactly the screenshot and nothing else
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://pixel-perfect-pixel-499.lovable.app
+**Live app**: https://taskbridge-weaam.lovable.app
 
 ## Build with Lovable
 
