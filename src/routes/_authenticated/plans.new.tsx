@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/_authenticated/plans/new")({
-  head: () => ({ meta: [{ title: "Create Plan — TaskBridge" }, { name: "description", content: "Create a new work plan." }] }),
+  head: () => ({ meta: [{ title: "Create Plan — TaskBridge" }, { name: "description", content: "Create a new work plan." }, { property: "og:title", content: "Create Plan — TaskBridge" }, { property: "og:description", content: "Create a new work plan." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: NewPlan,
 });
 

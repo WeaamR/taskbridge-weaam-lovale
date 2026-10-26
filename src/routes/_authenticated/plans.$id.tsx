@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ConfirmDelete } from "@/components/ConfirmDelete";
 
 export const Route = createFileRoute("/_authenticated/plans/$id")({
-  head: () => ({ meta: [{ title: "Plan — TaskBridge" }, { name: "description", content: "Plan details and tasks." }] }),
+  head: () => ({ meta: [{ title: "Plan — TaskBridge" }, { name: "description", content: "Plan details and tasks." }, { property: "og:title", content: "Plan — TaskBridge" }, { property: "og:description", content: "Plan details and tasks." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: PlanPage,
 });
 
